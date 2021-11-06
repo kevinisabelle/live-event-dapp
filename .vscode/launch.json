@@ -4,13 +4,20 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Mocha All",
-      "cwd": "${workspaceRoot}",
+      "name": "Debugs contracts",
+      "cwd": "${workspaceRoot}/contracts",
       "runtimeExecutable": "npm",
       "args": ["test"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "protocol": "inspector"
+    },
+    {
+      "name": "Launch Chrome",
+      "request": "launch",
+      "type": "pwa-chrome",
+      "url": "http://localhost:8080",
+      "webRoot": "${workspaceFolder}"
     }
   ]
 }

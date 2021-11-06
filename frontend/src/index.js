@@ -1,31 +1,20 @@
-import React, { useState } from "react";
-import ReactDOM from "react-dom";
-import moralis from "moralis";
+// Internet Explorer 11 requires polyfills and partially supported by this project.
+// import 'react-app-polyfill/ie11';
+// import 'react-app-polyfill/stable';
+import ReactDOM from 'react-dom';
+import './i18n';
+import './styles/app-base.css';
+import './styles/app-components.css';
+import './styles/app-utilities.css';
+import App from 'app/App';
+import * as serviceWorker from './serviceWorker';
+import reportWebVitals from './reportWebVitals';
 
-moralis.initialize(process.env.REACT_APP_MORALIS_APPLICATION_ID);
-moralis.serverURL = process.env.REACT_APP_MORALIS_SERVER_URL;
+ReactDOM.render(<App />, document.getElementById('root'));
 
-const initialUser = moralis.User.current();
+reportWebVitals();
 
-const App = () => {
-  const [user, setUser] = useState(initialUser);
-  const onLogin = async () => {
-    const user = await moralis.authenticate();
-    setUser(user);
-  };
-  const onLogout = () => {
-    moralis.User.logOut();
-    setUser(null);
-  };
-  if (user) {
-    return <button onClick={onLogout}>Logout</button>;
-  }
-  return <button onClick={onLogin}>Login</button>;
-};
-
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: http://bit.ly/CRA-PWA
+serviceWorker.unregister();

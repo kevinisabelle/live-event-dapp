@@ -3,34 +3,11 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { GetLiveEventsDocument } from "app/backend/graphql/generated/biz-graphql";
 
 export const getLiveEvents = createAsyncThunk(
   "mailApp/liveevents/getLiveEvents",
   async (routeParams, { dispatch }) => {
-    const client = await getApolloClient();
-    var liveevents = null;
-    const liveeventIndexRoute = routeParams.liveeventIndex;
-    await client
-      .query({
-        fetchPolicy: "network-only",
-        query: GetLiveEventsDocument,
-      })
-      .then((response) => {
-        liveevents = response;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    const currentLiveEvent = {
-      ...liveevents.data.liveevents[liveeventIndexRoute],
-      index: liveeventIndexRoute,
-    };
-
-    const labels = liveevents.data.liveevents[liveeventIndexRoute].labels;
-
-    dispatch(setLabels(labels));
+    var liveevents = [{ id: 1, name: "test event" }];
 
     return { liveevents, routeParams, currentLiveEvent };
   }
@@ -41,8 +18,8 @@ const liveeventsAdapter = createEntityAdapter({});
 export const { selectAll: selectLiveEvents, selectById: selectLiveEventById } =
   liveeventsAdapter.getSelectors((state) => state.mailApp.liveevents);
 
-const mailsSlice = createSlice({
-  name: "mailApp/liveevents",
+const liveEventsSplice = createSlice({
+  name: "liveevents",
   initialState: liveeventsAdapter.getInitialState({
     routeParams: {},
     liveevents: [],
@@ -70,6 +47,6 @@ const mailsSlice = createSlice({
   },
 });
 
-export const { setSelectedLiveEventByIndex } = mailsSlice.actions;
+export const { setSelectedLiveEventByIndex } = liveEventsSplice.actions;
 
-export default mailsSlice.reducer;
+export default liveEventsSplice.reducer;

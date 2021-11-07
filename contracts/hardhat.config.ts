@@ -23,6 +23,7 @@ const chainIds = {
   mainnet: 1,
   rinkeby: 4,
   ropsten: 3,
+  ganache: 1337,
 };
 
 // Ensure that we have all the environment variables we need.
@@ -37,7 +38,12 @@ if (!infuraApiKey) {
 }
 
 function getChainConfig(network: keyof typeof chainIds): NetworkUserConfig {
-  const url: string = "https://" + network + ".infura.io/v3/" + infuraApiKey;
+  var url: string = "https://" + network + ".infura.io/v3/" + infuraApiKey;
+
+  if (network === "ganache") {
+    url = "http://127.0.0.1:7545";
+  }
+
   return {
     accounts: {
       count: 10,
@@ -50,7 +56,7 @@ function getChainConfig(network: keyof typeof chainIds): NetworkUserConfig {
 }
 
 const config: HardhatUserConfig = {
-  defaultNetwork: "hardhat",
+  defaultNetwork: "ganache",
   gasReporter: {
     currency: "USD",
     enabled: process.env.REPORT_GAS ? true : false,
@@ -68,6 +74,7 @@ const config: HardhatUserConfig = {
     kovan: getChainConfig("kovan"),
     rinkeby: getChainConfig("rinkeby"),
     ropsten: getChainConfig("ropsten"),
+    ganache: getChainConfig("ganache"),
   },
   paths: {
     artifacts: "./artifacts",

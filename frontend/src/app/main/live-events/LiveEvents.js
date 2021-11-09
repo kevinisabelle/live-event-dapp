@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import reducer from "./store";
 import { getLiveEvents } from "./store/liveEventsSlice";
 import LiveEventFactory from "abis/LiveEventFactory";
-import Web3 from "web3";
+
 import LiveEventTicket from "abis/LiveEventTicket";
 
 function LiveEvents(props) {
@@ -22,35 +22,14 @@ function LiveEvents(props) {
   const liveEventFactoryContractAddess =
     "0x14a4433B872164183Ce74985AAC470F9B14cC56A";
 
-  if (window.ethereum) {
-    window.web3 = new Web3(ethereum);
-  }
-  // Legacy dapp browsers...
-  else if (window.web3) {
-    window.web3 = new Web3(web3.currentProvider);
-  }
-  // Non-dapp browsers...
-  else {
-    console.log(
-      "Non-Ethereum browser detected. You should consider trying MetaMask!"
-    );
-    return;
-  }
-
   var contract = new web3.eth.Contract(
     LiveEventFactory.abi,
     liveEventFactoryContractAddess
   );
-  console.log(contract);
 
   useEffect(() => {
     // dispatch(getLiveEvents(routeParams));
   }, [dispatch, routeParams, web3]);
-
-  /*
-  window.web3 = await Moralis.Web3.enable();
-  
-  */
 
   async function connectUser() {
     await authenticate();
@@ -69,7 +48,7 @@ function LiveEvents(props) {
     await logout();
   }
 
-  var name = "New Event";
+  var name = "Another great event";
   var location = "New location";
   var categories = ["Vip", "Regular"];
   var prices = [5000, 1000];
@@ -94,16 +73,17 @@ function LiveEvents(props) {
 
   function getEvents() {
     contract.methods
-      .liveEvents(ethereum.selectedAddress, 0)
+      .eventsList(0)
       .call({ from: ethereum.selectedAddress })
       .then(function (result) {
-        var eventContract = new web3.eth.Contract(LiveEventTicket.abi, result);
+        console.log(result);
+        /*var eventContract = new web3.eth.Contract(LiveEventTicket.abi, result);
         eventContract.methods
           ._name()
           .call({ from: ethereum.selectedAddress })
           .then(function (name) {
             console.log(name);
-          });
+          });*/
       });
   }
 

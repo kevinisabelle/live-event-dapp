@@ -10,6 +10,7 @@ import reducer from "./store";
 import { getLiveEvents } from "./store/liveEventsSlice";
 import LiveEventFactory from "abis/LiveEventFactory";
 import Web3 from "web3";
+import LiveEventTicket from "abis/LiveEventTicket";
 
 function LiveEvents(props) {
   const dispatch = useDispatch();
@@ -96,7 +97,13 @@ function LiveEvents(props) {
       .liveEvents(ethereum.selectedAddress, 0)
       .call({ from: ethereum.selectedAddress })
       .then(function (result) {
-        console.log(result);
+        var eventContract = new web3.eth.Contract(LiveEventTicket.abi, result);
+        eventContract.methods
+          ._name()
+          .call({ from: ethereum.selectedAddress })
+          .then(function (name) {
+            console.log(name);
+          });
       });
   }
 

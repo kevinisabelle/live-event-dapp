@@ -1,4 +1,4 @@
-LiveEventTicket = {
+const LiveEventTicket = {
   _format: "hh-sol-artifact-1",
   contractName: "LiveEventTicket",
   sourceName: "contracts/LiveEventTicket.sol",
@@ -1213,3 +1213,5 @@ LiveEventTicket = {
   linkReferences: {},
   deployedLinkReferences: {},
 };
+
+export default LiveEventTicket;

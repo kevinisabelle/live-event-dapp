@@ -12,7 +12,7 @@ import { resolve } from "path";
 import { config as dotenvConfig } from "dotenv";
 import { HardhatUserConfig } from "hardhat/config";
 import { NetworkUserConfig } from "hardhat/types";
-require("@nomiclabs/hardhat-ganache");
+// require("@nomiclabs/hardhat-ganache");
 
 dotenvConfig({ path: resolve(__dirname, "./.env") });
 
@@ -23,7 +23,6 @@ const chainIds = {
   mainnet: 1,
   rinkeby: 4,
   ropsten: 3,
-  ganache: 1337,
 };
 
 // Ensure that we have all the environment variables we need.
@@ -39,10 +38,6 @@ if (!infuraApiKey) {
 
 function getChainConfig(network: keyof typeof chainIds): NetworkUserConfig {
   var url: string = "https://" + network + ".infura.io/v3/" + infuraApiKey;
-
-  if (network === "ganache") {
-    url = "http://127.0.0.1:7545";
-  }
 
   return {
     accounts: {
@@ -74,7 +69,6 @@ const config: HardhatUserConfig = {
     kovan: getChainConfig("kovan"),
     rinkeby: getChainConfig("rinkeby"),
     ropsten: getChainConfig("ropsten"),
-    ganache: getChainConfig("ganache"),
   },
   paths: {
     artifacts: "./artifacts",

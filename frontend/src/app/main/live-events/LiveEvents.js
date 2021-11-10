@@ -48,8 +48,8 @@ function LiveEvents(props) {
     await logout();
   }
 
-  var name = "Another great event";
-  var location = "New location";
+  var name = "Live Reggaeton Show";
+  var location = "San Juan, Puerto Rico";
   var categories = ["Vip", "Regular"];
   var prices = [5000, 1000];
   var seatCounts = [100, 500];

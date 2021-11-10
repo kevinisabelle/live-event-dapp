@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 import "../node_modules/@openzeppelin/contracts/token/ERC1155/presets/ERC1155PresetMinterPauser.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "hardhat/console.sol";
+import "../node_modules/hardhat/console.sol";
 
 contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
     uint256 public _contractBalance;

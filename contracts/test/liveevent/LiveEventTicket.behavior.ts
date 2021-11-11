@@ -1,14 +1,22 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { expect } from "chai";
+import { assert, expect } from "chai";
 import { Context } from "mocha";
 import { LiveEventTicket__factory } from "../../types";
 
 export function CreateNewLiveEvent(): void {
   it("should create a new event", async function () {
-    await this.liveEventFactoryContract
+    var tx = await this.liveEventFactoryContract
       .connect(this.signers.concertCreator)
       .createLiveEvent("My concert", "Centre Bell", [200, 100], ["VIP", "Standard"], [10, 150], [true, false]);
 
+    var receipt = await tx.wait(1);
+
+    var { events } = receipt;
+    assert.ok(Array.isArray(events));
+    assert.equal(events?.length, 6);
+    var event = events ? events[5] : null;
+    assert.equal(event?.args?.[2], "My concert");
+    console.log(event?.eventSignature);
     await connectToEvent(this.signers.concertCreator, this.signers.concertCreator.address, 0, this);
 
     var ticketsCount = await this.liveEventTicketContract.getTotalTicketCount();
@@ -151,6 +159,6 @@ export function ConcertCreatorRetrieveFundsAfterEvent(): void {
 }
 
 async function connectToEvent(user: SignerWithAddress, eventCreator: string, eventIndex: number, context: Context) {
-  var event = await context.liveEventFactoryContract.connect(user).getEvent(eventCreator, eventIndex);
-  context.liveEventTicketContract = LiveEventTicket__factory.connect(event, user);
+  var events = await context.liveEventFactoryContract.connect(user).getEvent(eventCreator);
+  context.liveEventTicketContract = LiveEventTicket__factory.connect(events[eventIndex], user);
 }

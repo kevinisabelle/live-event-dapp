@@ -26,14 +26,42 @@ const LiveEventFactory = {
         {
           indexed: false,
           internalType: "string",
-          name: "name",
+          name: "eventName",
           type: "string",
         },
         {
           indexed: false,
           internalType: "string",
-          name: "location",
+          name: "eventLocation",
           type: "string",
+        },
+        {
+          components: [
+            {
+              internalType: "uint256[]",
+              name: "prices",
+              type: "uint256[]",
+            },
+            {
+              internalType: "string[]",
+              name: "categories",
+              type: "string[]",
+            },
+            {
+              internalType: "uint256[]",
+              name: "seatCounts",
+              type: "uint256[]",
+            },
+            {
+              internalType: "bool[]",
+              name: "canBeResoldHigher",
+              type: "bool[]",
+            },
+          ],
+          indexed: false,
+          internalType: "struct LiveEventFactory.PriceStructure",
+          name: "eventPriceStructure",
+          type: "tuple",
         },
       ],
       name: "NewEventCreated",
@@ -84,18 +112,13 @@ const LiveEventFactory = {
           name: "owner",
           type: "address",
         },
-        {
-          internalType: "uint256",
-          name: "index",
-          type: "uint256",
-        },
       ],
       name: "getEvent",
       outputs: [
         {
-          internalType: "contract LiveEventTicket",
+          internalType: "address[]",
           name: "",
-          type: "address",
+          type: "address[]",
         },
       ],
       stateMutability: "view",
@@ -103,11 +126,6 @@ const LiveEventFactory = {
     },
     {
       inputs: [
-        {
-          internalType: "address",
-          name: "",
-          type: "address",
-        },
         {
           internalType: "uint256",
           name: "",

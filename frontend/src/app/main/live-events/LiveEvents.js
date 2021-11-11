@@ -20,7 +20,7 @@ function LiveEvents(props) {
     useMoralis();
   const [userEmail, setUserEmail] = useState(user?.getEmail() ?? "");
   const liveEventFactoryContractAddess =
-    "0x14a4433B872164183Ce74985AAC470F9B14cC56A";
+    "0xC73a806f4CeE5BB64E8fAF6e7249a215b18903bb";
 
   var contract = new web3.eth.Contract(
     LiveEventFactory.abi,

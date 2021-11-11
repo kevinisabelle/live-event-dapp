@@ -12,7 +12,7 @@ import { resolve } from "path";
 import { config as dotenvConfig } from "dotenv";
 import { HardhatUserConfig } from "hardhat/config";
 import { NetworkUserConfig } from "hardhat/types";
-// require("@nomiclabs/hardhat-ganache");
+require("@nomiclabs/hardhat-ganache");
 
 dotenvConfig({ path: resolve(__dirname, "./.env") });
 

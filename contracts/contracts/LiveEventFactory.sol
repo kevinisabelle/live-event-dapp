@@ -8,15 +8,23 @@ import "../node_modules/hardhat/console.sol";
 import "./LiveEventTicket.sol";
 
 contract LiveEventFactory {
-    mapping(address => LiveEventTicket[]) public liveEvents;
+    LiveEventTicket[] public liveEvents;
 
-    event NewEventCreated(address owner, address eventAddress, string name, string location);
+    event NewEventCreated(address owner, address eventAddress, string eventName, string eventLocation, PriceStructure eventPriceStructure);
 
     /*struct EventWithNameAndOwner  {
         address Owner ;
         address EventAddress;
         string EventName;
     }*/
+
+    struct PriceStructure
+    {
+        uint256[] prices;
+        string[] categories;
+        uint256[] seatCounts;
+        bool[] canBeResoldHigher;
+    }
 
     //EventWithNameAndOwner[] public eventsList;
     
@@ -29,7 +37,7 @@ contract LiveEventFactory {
         string[] memory categories,
         uint256[] memory seatCounts,
         bool[] memory canBeResoldHigher
-    ) public {
+    ) external {
         
         LiveEventTicket newEvent = new LiveEventTicket(
             name,
@@ -41,7 +49,7 @@ contract LiveEventFactory {
         );
 
         newEvent.transferOwnership(msg.sender);
-        liveEvents[msg.sender].push(newEvent);
+        liveEvents.push(newEvent);
 
         //EventWithNameAndOwner memory eventDetails;
         //eventDetails.EventName = name;
@@ -50,12 +58,37 @@ contract LiveEventFactory {
 
         //eventsList.push(eventDetails);
 
-        emit NewEventCreated(msg.sender, address(newEvent), name, location);
+        PriceStructure memory priceStructure = PriceStructure(prices, categories, seatCounts, canBeResoldHigher);
 
-        console.log("Emitted event");
+        emit NewEventCreated(address(msg.sender), address(newEvent), name, location, priceStructure);
+
+        // console.log("Emitted event");
     }
 
-    function getEvent(address owner, uint256 index) public view returns (LiveEventTicket) {
-        return LiveEventTicket(address(liveEvents[owner][index]));
+    function getEvent(address owner) public view returns (address[] memory) {
+
+        uint256 foundCount = 0;
+
+        for (uint i = 0; i<liveEvents.length;i++)
+        {
+            LiveEventTicket currentEvent = LiveEventTicket(liveEvents[i]);
+            if (currentEvent.owner() == owner){
+                foundCount++;
+            }
+        }
+
+        address[] memory returnvalue = new address[](foundCount);
+        uint256 position = 0;
+
+        for (uint i = 0; i<liveEvents.length;i++)
+        {
+            LiveEventTicket currentEvent = LiveEventTicket(liveEvents[i]);
+            if (currentEvent.owner() == owner){
+                returnvalue[position] = address(liveEvents[i]);
+                position++;
+            }
+        }
+        
+        return returnvalue;
     }
 }

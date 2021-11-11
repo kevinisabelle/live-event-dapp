@@ -159,6 +159,6 @@ export function ConcertCreatorRetrieveFundsAfterEvent(): void {
 }
 
 async function connectToEvent(user: SignerWithAddress, eventCreator: string, eventIndex: number, context: Context) {
-  var events = await context.liveEventFactoryContract.connect(user).getEvent(eventCreator);
+  var events = await context.liveEventFactoryContract.connect(user).getEvents(eventCreator);
   context.liveEventTicketContract = LiveEventTicket__factory.connect(events[eventIndex], user);
 }

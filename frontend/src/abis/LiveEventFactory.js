@@ -108,12 +108,44 @@ const LiveEventFactory = {
     {
       inputs: [
         {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      name: "eventsOwners",
+      outputs: [
+        {
+          internalType: "address",
+          name: "",
+          type: "address",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
           internalType: "address",
           name: "owner",
           type: "address",
         },
       ],
-      name: "getEvent",
+      name: "getEvents",
+      outputs: [
+        {
+          internalType: "address[]",
+          name: "",
+          type: "address[]",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "getOwners",
       outputs: [
         {
           internalType: "address[]",

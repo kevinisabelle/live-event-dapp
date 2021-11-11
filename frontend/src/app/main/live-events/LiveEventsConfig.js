@@ -9,7 +9,7 @@ const LiveEventsConfig = {
   },
   routes: [
     {
-      path: "/liveEvents/:eventId?",
+      path: "/liveEvents/:eventOwner?/:eventAddress?",
       component: React.lazy(() => import("./LiveEvents")),
     },
   ],

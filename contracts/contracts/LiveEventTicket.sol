@@ -4,12 +4,12 @@ pragma solidity ^0.8.0;
 
 import "../node_modules/@openzeppelin/contracts/token/ERC1155/presets/ERC1155PresetMinterPauser.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "../node_modules/hardhat/console.sol";
 
 contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
     uint256 public _contractBalance;
     string public _name;
     string public _location;
+    string public _metadata;
 
     uint256[] public _prices;
     string[] public _categories;
@@ -31,6 +31,7 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
     constructor(
         string memory name,
         string memory location,
+        string memory metadata,
         uint256[] memory prices,
         string[] memory categories,
         uint256[] memory seatCounts,
@@ -41,6 +42,7 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
         _canBeResoldHigher = canBeResoldHigher;
         _seatCounts = seatCounts;
         _categories = categories;
+        _metadata = metadata;
         _prices = prices;
         _supplies = new uint256[](prices.length);
     }
@@ -60,10 +62,15 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
             uint256 qtyToMint = _seatCounts[categoryIndex] - _supplies[categoryIndex];
 
             if (qtyToMint > 0) {
-                _mint(msg.sender, categoryIndex, qtyToMint, stringToBytes(_categories[categoryIndex]));
+                _mint(msg.sender, categoryIndex, qtyToMint, bytes(_categories[categoryIndex]));
                 _supplies[categoryIndex] += qtyToMint;
             }
         }
+    }
+
+    function getDetails() public view returns(uint256, string memory, string memory, string memory)
+    {
+        return (_contractBalance, _name, _location, _metadata);
     }
 
     function setTicketsForSale(
@@ -109,8 +116,6 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
         uint256 categoryIndex
     ) public payable {
         // Check that the from has the required amount of tickets
-        console.log("Received buy ticket order");
-
         require(balanceOf(from, categoryIndex) > 0, "No tickets at this address");
 
         // Check that the ticket is for sell and get the price
@@ -122,7 +127,7 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
 
         require(
             price * amount == msg.value,
-            append(append("Eth sent must equals the price x quantity: ", uint2str(msg.value)), uint2str(price * amount))
+            "Eth sent must equals the price x quantity"
         );
 
         // Transfert value to ticket owner // Transfert tickets to destination
@@ -133,41 +138,12 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
             require(sent, "Failed to send Ether");
         }
 
-        _safeTransferFrom(from, msg.sender, categoryIndex, amount, stringToBytes("Buy ticket"));
+        _safeTransferFrom(from, msg.sender, categoryIndex, amount, bytes("Buy ticket"));
 
         ticketIndex = this.getTicketsForSaleIndex(from, categoryIndex);
-        // TicketForSale memory tickets = ;
 
         toSell[uint256(ticketIndex)].amount -= amount;
     }
-
-    function append(string memory a, string memory b) internal pure returns (string memory) {
-        return string(abi.encodePacked(a, b));
-    }
-
-    function uint2str(uint256 _i) internal pure returns (string memory _uintAsString) {
-        if (_i == 0) {
-            return "0";
-        }
-        uint256 j = _i;
-        uint256 len;
-        while (j != 0) {
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(len);
-        uint256 k = len;
-        while (_i != 0) {
-            k = k - 1;
-            uint8 temp = (48 + uint8(_i - (_i / 10) * 10));
-            bytes1 b1 = bytes1(temp);
-            bstr[k] = b1;
-            _i /= 10;
-        }
-        return string(bstr);
-    }
-
-    // function getTicketPrice(address from, uint256 categoryIndex) private returns (TicketPrice ticketPrice) {}
 
     function getTotalTicketCount() public view returns (uint256) {
         uint256 total = 0;
@@ -206,9 +182,7 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
         return result;
     }
 
-    // set attended to true
     function attendEvent(uint256 categoryIndex) public {
-        // Check user has a proper ticket for the category
 
         uint256 userBalance = balanceOf(msg.sender, categoryIndex);
         require(userBalance > 0, "User has no ticket of this category");
@@ -220,17 +194,11 @@ contract LiveEventTicket is ERC1155PresetMinterPauser, Ownable {
         return attendees[msg.sender];
     }
 
-    // transfert ownership
     function transfertTicket(
         address to,
         uint256 category,
         uint256 amount
     ) public {
-        _safeTransferFrom(msg.sender, to, category, amount, stringToBytes("Transfert ticket"));
-    }
-
-    function stringToBytes(string memory s) public pure returns (bytes memory) {
-        bytes memory b3 = bytes(s);
-        return b3;
+        _safeTransferFrom(msg.sender, to, category, amount, bytes("Transfert ticket"));
     }
 }

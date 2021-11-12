@@ -3,28 +3,20 @@ pragma solidity ^0.8.0;
 
 import "../node_modules/@openzeppelin/contracts/token/ERC1155/presets/ERC1155PresetMinterPauser.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "../node_modules/hardhat/console.sol";
 import "./LiveEventTicket.sol";
 
 contract LiveEventFactory {
     LiveEventTicket[] public liveEvents;
     address[] public eventsOwners;
 
-    event NewEventCreated(address owner, address eventAddress, string eventName, string eventLocation, PriceStructure eventPriceStructure);
-
-    struct PriceStructure
-    {
-        uint256[] prices;
-        string[] categories;
-        uint256[] seatCounts;
-        bool[] canBeResoldHigher;
-    }
+    event NewEventCreated(address owner, address eventAddress, string eventName, string eventLocation);
 
     constructor() {}
 
     function createLiveEvent(
         string memory name,
         string memory location,
+        string memory metadata,
         uint256[] memory prices,
         string[] memory categories,
         uint256[] memory seatCounts,
@@ -34,6 +26,7 @@ contract LiveEventFactory {
         LiveEventTicket newEvent = new LiveEventTicket(
             name,
             location,
+            metadata,
             prices,
             categories,
             seatCounts,
@@ -47,8 +40,8 @@ contract LiveEventFactory {
 
         for (uint256 i=0;i<eventsOwners.length;i++)
         {
-            if (eventsOwners[i] == address(msg.sender)){
-                addOwner == false;
+            if (address(eventsOwners[i]) == address(msg.sender)){
+                addOwner = false;
                 break;
             }
         }
@@ -56,10 +49,8 @@ contract LiveEventFactory {
         if (addOwner) {
             eventsOwners.push(address(msg.sender));
         }
-        
-        PriceStructure memory priceStructure = PriceStructure(prices, categories, seatCounts, canBeResoldHigher);
-
-        emit NewEventCreated(address(msg.sender), address(newEvent), name, location, priceStructure);
+    
+        emit NewEventCreated(address(msg.sender), address(newEvent), name, location);
     }
 
     function getEvents(address owner) public view returns (address[] memory) {
@@ -92,6 +83,4 @@ contract LiveEventFactory {
     function getOwners() public view returns (address[] memory) {
         return eventsOwners;
     }
-
-    
 }

@@ -16,6 +16,11 @@ const LiveEventTicket = {
           type: "string",
         },
         {
+          internalType: "string",
+          name: "metadata",
+          type: "string",
+        },
+        {
           internalType: "uint256[]",
           name: "prices",
           type: "uint256[]",
@@ -382,6 +387,19 @@ const LiveEventTicket = {
     },
     {
       inputs: [],
+      name: "_metadata",
+      outputs: [
+        {
+          internalType: "string",
+          name: "",
+          type: "string",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
       name: "_name",
       outputs: [
         {
@@ -607,6 +625,34 @@ const LiveEventTicket = {
           internalType: "uint256",
           name: "",
           type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "getDetails",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+        {
+          internalType: "string",
+          name: "",
+          type: "string",
+        },
+        {
+          internalType: "string",
+          name: "",
+          type: "string",
+        },
+        {
+          internalType: "string",
+          name: "",
+          type: "string",
         },
       ],
       stateMutability: "view",
@@ -1069,25 +1115,6 @@ const LiveEventTicket = {
       name: "setTicketsForSale",
       outputs: [],
       stateMutability: "nonpayable",
-      type: "function",
-    },
-    {
-      inputs: [
-        {
-          internalType: "string",
-          name: "s",
-          type: "string",
-        },
-      ],
-      name: "stringToBytes",
-      outputs: [
-        {
-          internalType: "bytes",
-          name: "",
-          type: "bytes",
-        },
-      ],
-      stateMutability: "pure",
       type: "function",
     },
     {

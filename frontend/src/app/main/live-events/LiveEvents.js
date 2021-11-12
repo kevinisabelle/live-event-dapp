@@ -23,7 +23,7 @@ function LiveEvents(props) {
     useMoralis();
   const [userEmail, setUserEmail] = useState(user?.getEmail() ?? "");
   const liveEventFactoryContractAddess =
-    "0xca3b204cEE1850124C6F80a42848135E9f09F0fE";
+    "0x2CE09d41cFDA1d9e485958Bb1d35e997379Ee75C";
   const toPath = pathToRegexp.compile(props.match.path);
 
   var contract = new web3.eth.Contract(
@@ -45,6 +45,7 @@ function LiveEvents(props) {
 
   async function connectUser() {
     await authenticate();
+    setUserEmail(user?.getEmail());
   }
 
   async function signupDetails() {
@@ -62,6 +63,7 @@ function LiveEvents(props) {
 
   var name = "Another great show";
   var location = "San Juan, Puerto Rico";
+  var metadata = "AGE_18|Other metadata";
   var categories = ["Vip", "Regular"];
   var prices = [5000, 1000];
   var seatCounts = [100, 500];
@@ -72,6 +74,7 @@ function LiveEvents(props) {
       .createLiveEvent(
         name,
         location,
+        metadata,
         prices,
         categories,
         seatCounts,
@@ -79,7 +82,7 @@ function LiveEvents(props) {
       )
       .send({ from: ethereum.selectedAddress, value: 0 })
       .on("receipt", function (receipt) {
-        console.log(receipt);
+        NavigateToEventOwner(ethereum.selectedAddress);
       });
   }
 

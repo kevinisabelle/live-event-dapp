@@ -35,34 +35,6 @@ const LiveEventFactory = {
           name: "eventLocation",
           type: "string",
         },
-        {
-          components: [
-            {
-              internalType: "uint256[]",
-              name: "prices",
-              type: "uint256[]",
-            },
-            {
-              internalType: "string[]",
-              name: "categories",
-              type: "string[]",
-            },
-            {
-              internalType: "uint256[]",
-              name: "seatCounts",
-              type: "uint256[]",
-            },
-            {
-              internalType: "bool[]",
-              name: "canBeResoldHigher",
-              type: "bool[]",
-            },
-          ],
-          indexed: false,
-          internalType: "struct LiveEventFactory.PriceStructure",
-          name: "eventPriceStructure",
-          type: "tuple",
-        },
       ],
       name: "NewEventCreated",
       type: "event",
@@ -77,6 +49,11 @@ const LiveEventFactory = {
         {
           internalType: "string",
           name: "location",
+          type: "string",
+        },
+        {
+          internalType: "string",
+          name: "metadata",
           type: "string",
         },
         {

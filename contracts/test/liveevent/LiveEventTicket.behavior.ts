@@ -7,7 +7,15 @@ export function CreateNewLiveEvent(): void {
   it("should create a new event", async function () {
     var tx = await this.liveEventFactoryContract
       .connect(this.signers.concertCreator)
-      .createLiveEvent("My concert", "Centre Bell", [200, 100], ["VIP", "Standard"], [10, 150], [true, false]);
+      .createLiveEvent(
+        "My concert",
+        "Centre Bell",
+        "AGE_18|OtherMetadata",
+        [200, 100],
+        ["VIP", "Standard"],
+        [10, 150],
+        [true, false],
+      );
 
     var receipt = await tx.wait(1);
 
@@ -17,7 +25,23 @@ export function CreateNewLiveEvent(): void {
     var event = events ? events[5] : null;
     assert.equal(event?.args?.[2], "My concert");
     console.log(event?.eventSignature);
+
+    await this.liveEventFactoryContract
+      .connect(this.signers.concertCreator)
+      .createLiveEvent(
+        "My concert 2",
+        "Centre Bell",
+        "AGE_ALL|OtherMetadata",
+        [200, 100],
+        ["VIP", "Standard"],
+        [10, 150],
+        [true, false],
+      );
+
     await connectToEvent(this.signers.concertCreator, this.signers.concertCreator.address, 0, this);
+
+    var owners = await this.liveEventFactoryContract.getOwners();
+    expect(owners.length).to.equal(1);
 
     var ticketsCount = await this.liveEventTicketContract.getTotalTicketCount();
     var mintedTickets = await this.liveEventTicketContract.getTotalTicketsMinted();
